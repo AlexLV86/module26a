@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"container/ring"
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 	"sync"
@@ -66,6 +67,7 @@ func filter1(done <-chan struct{}, input <-chan int) <-chan int {
 		defer close(dataStream)
 		// читаем канал пока он не будет закрыт
 		for num := range input {
+			log.Printf("Handle positive numbers: %d\n", num)
 			if num < 0 {
 				continue
 			}
@@ -87,6 +89,7 @@ func filter2(done <-chan struct{}, input <-chan int) <-chan int {
 		defer close(dataStream)
 		// читаем канал пока он не будет закрыт
 		for num := range input {
+			log.Printf("Handle multiples of 3: %d\n", num)
 			if num == 0 || num%3 != 0 {
 				continue
 			}
@@ -140,6 +143,7 @@ func main() {
 					return
 				// заполнять кольцевой буфер
 				case num := <-input:
+					log.Printf("Add to ring buffer: %d\n", num)
 					r.Write(num)
 				}
 			}
